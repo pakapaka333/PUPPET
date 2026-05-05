@@ -1,0 +1,28 @@
+# General configuration
+general:
+  run_name: "generation_vllm_longform_qa_qwen3_4b_dpo_multinews_lrx100_drstd_5000"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-4B"
+  lora_path: "PUPPET/experimental/dpo/checkpoints/training_multinews_qwen3_4b_lrx100_drstd_5000_2026_0322_051432"
+  kwargs:
+    dtype: "float16"
+    tensor_parallel_size: 1
+
+# Generation parameters
+generation:
+  max_samples: null
+  kwargs:
+    n: 3
+  chat_template_kwargs:
+    enable_thinking: false
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    benchmark: "waterbench"
+    dataset: "longform_qa"
+  output:
+    path: "vllm_gen/data"

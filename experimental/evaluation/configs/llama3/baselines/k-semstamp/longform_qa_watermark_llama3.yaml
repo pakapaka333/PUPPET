@@ -1,0 +1,26 @@
+# General configuration
+general:
+  run_name: "evaluation_watermark_longform_qa_llama3_k-semstamp"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    rouge_score_waterbench:
+      reference:
+        path: "watermark_gen/data/baselines/k-semstamp/generation_watermark_longform_qa_llama3_k-semstamp_2026_0130_183812.jsonl"
+        field: "outputs"
+  preprocess:
+    - name: "extract_answer_with_regex"
+      kwargs:
+        full_output_field: "watermarked_model_output"
+        regex_pattern: 'assistant\s*\n\s*\n(.*)$'
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "watermark_gen/data/baselines/k-semstamp/generation_watermark_longform_qa_llama3_k-semstamp_2026_0130_183812.jsonl"
+    field: "watermarked_model_output"
+  output:
+    path: "evaluation/results"

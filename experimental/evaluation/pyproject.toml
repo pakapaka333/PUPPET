@@ -1,0 +1,35 @@
+[project]
+name = "evaluate"
+version = "0.1.0"
+description = "A project to evaluate generations"
+authors = [{ name = "Koshiro Saito" }]
+requires-python = ">=3.12"
+
+dependencies = [
+    "accelerate",
+    "datasets",
+    "nltk",
+    "pandas",
+    "pyyaml",
+    "Rouge",
+    "torch",
+    "tqdm",
+    "transformers",
+    "vllm",
+
+    # for MAGE preprocess
+    "clean-text",
+    "unidecode",
+
+    # for Fast-DetectGPT
+    "matplotlib",
+    "scikit-learn",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url  = "https://download.pytorch.org/whl/cu128"
+explicit = true

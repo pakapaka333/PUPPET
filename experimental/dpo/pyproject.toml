@@ -1,0 +1,23 @@
+[project]
+name = "dpo"
+version = "0.1.0"
+description = "A project to run dpo."
+authors = ["Koshiro Saito"]
+requires-python = ">=3.12"
+
+dependencies = [
+    "bitsandbytes",
+    "pandas",
+    "peft",
+    "trl",
+    "torch",
+    "wandb",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url  = "https://download.pytorch.org/whl/cu128"
+explicit = true

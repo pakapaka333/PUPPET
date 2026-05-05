@@ -1,0 +1,26 @@
+# General configuration
+general:
+  run_name: "evaluation_vllm_longform_qa_llama3_dpo_lrx100_drstd_5000_ckpt125"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    rouge_score_waterbench:
+      reference:
+        path: "vllm_gen/data/ours/ckpts/llama3/longform_qa/generation_vllm_longform_qa_llama3_dpo_lrx100_drstd_5000_ckpt125_2026_0211_130029.jsonl"
+        field: "outputs"
+    detect_openai:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+  preprocess: {}
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "vllm_gen/data/ours/ckpts/llama3/longform_qa/generation_vllm_longform_qa_llama3_dpo_lrx100_drstd_5000_ckpt125_2026_0211_130029.jsonl"
+    field: "vllm_model_output"
+  output:
+    path: "evaluation/results"

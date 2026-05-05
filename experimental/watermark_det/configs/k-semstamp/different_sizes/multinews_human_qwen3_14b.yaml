@@ -1,0 +1,27 @@
+# General configuration
+general:
+  run_name: "detection_human_multinews_qwen3_14b_k-semstamp"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-14B"
+  vocab_size: 151936
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "KSEMSTAMP"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "submodules/WaterBench/data/WaterBench/4-1_multi_news.jsonl"
+    field: "outputs"
+    extract:
+      method: flatten
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"

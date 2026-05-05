@@ -1,0 +1,26 @@
+# General configuration
+general:
+  run_name: "generation_vllm_multi_news_llama3_dpo_outfox_lrx100_drstd_5000"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  lora_path: "PUPPET/experimental/dpo/checkpoints/training_outfox_llama3_lrx100_drstd_5000_2025_1218_102310"
+  kwargs:
+    dtype: "float16"
+    tensor_parallel_size: 1
+
+# Generation parameters
+generation:
+  max_samples: null
+  kwargs:
+    n: 1
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    benchmark: "waterbench"
+    dataset: "multi_news"
+  output:
+    path: "vllm_gen/data"

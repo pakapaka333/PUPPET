@@ -1,0 +1,29 @@
+# General configuration
+general:
+  run_name: "detection_watermark_ielts_qwen3_14b_kgw"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-14B"
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "KGW"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "watermark_gen/data/generation_watermark_ielts_qwen3_14b_kgw_2026_0323_105543.jsonl"
+    field: "watermarked_model_output"
+    extract:
+      method: flatten
+      kwargs: {}
+    preprocess:
+      - name: "extract_answer_with_regex"
+        kwargs:
+          regex_pattern: 'assistant\s*\n<think>\s*\n\s*</think>\s*\n\s*(.*)$'
+  output:
+    path: "watermark_det/results"

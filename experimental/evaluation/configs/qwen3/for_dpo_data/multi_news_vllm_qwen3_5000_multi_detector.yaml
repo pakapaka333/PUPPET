@@ -1,0 +1,30 @@
+# General configuration
+general:
+  run_name: "evaluation_vllm_multinews_qwen3_5000_multi_detector"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    detect_fakespotai:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+    detect_mage:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+    rouge_score_waterbench:
+      reference:
+        path: "vllm_gen/data/for_dpo_data/generation_vllm_multi_news_qwen3_random_5000_2025_1207_222615.jsonl"
+        field: "answers"
+  preprocess: {}
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "vllm_gen/data/for_dpo_data/generation_vllm_multi_news_qwen3_random_5000_2025_1207_222615.jsonl"
+    field: "vllm_model_output"
+  output:
+    path: "evaluation/results"

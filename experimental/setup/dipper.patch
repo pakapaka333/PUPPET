@@ -1,0 +1,17 @@
+diff --git a/dipper_paraphrases/paraphrase_minimal.py b/dipper_paraphrases/paraphrase_minimal.py
+index 7d21d31..855ba25 100644
+--- a/dipper_paraphrases/paraphrase_minimal.py
++++ b/dipper_paraphrases/paraphrase_minimal.py
+@@ -8,10 +8,10 @@ nltk.download('punkt')
+ 
+ 
+ class DipperParaphraser(object):
+-    def __init__(self, model="kalpeshk2011/dipper-paraphraser-xxl", verbose=True):
++    def __init__(self, model="kalpeshk2011/dipper-paraphraser-xxl", verbose=True, model_kwargs={}):
+         time1 = time.time()
+         self.tokenizer = T5Tokenizer.from_pretrained('google/t5-v1_1-xxl')
+-        self.model = T5ForConditionalGeneration.from_pretrained(model)
++        self.model = T5ForConditionalGeneration.from_pretrained(model, **model_kwargs)
+         if verbose:
+             print(f"{model} model loaded in {time.time() - time1}")
+         self.model.cuda()

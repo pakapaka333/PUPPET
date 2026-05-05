@@ -1,0 +1,18 @@
+# prompt_template is referenced from https://github.com/THU-KEG/WaterBench/blob/main/config/dataset2prompt.json.
+prompt_template: "You are a helpful assistant, please answer the following question within 300 words:\n{context}\n{input}"
+
+model:
+  name: meta-llama/Llama-3.1-8B-Instruct
+  kwargs:
+    dtype: float16
+    tensor_parallel_size: 1
+
+# min_tokens is referenced from https://github.com/redwyd/SymMark/blob/f68a52ae4ad34632222aadcc96770af84b4c51ae/config/DT.json.
+# max_tokens is referenced from https://github.com/THU-KEG/WaterBench/blob/main/config/dataset2maxlen.json.
+sampling:
+  min_tokens: 200
+  max_tokens: 300
+  n: 5
+
+input_dir: 2_build_dataset/1_base_dataset/data
+output_path: 2_build_dataset/2_llm_responses/data/responses.jsonl

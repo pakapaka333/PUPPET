@@ -1,0 +1,26 @@
+# General configuration
+general:
+  run_name: "evaluation_watermark_multi_news_qwen3_unigram"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    rouge_score_waterbench:
+      reference:
+        path: "watermark_gen/data/baselines/unigram/generation_watermark_multi_news_qwen3_unigram_2026_0129_140049.jsonl"
+        field: "outputs"
+  preprocess:
+    - name: "extract_answer_with_regex"
+      kwargs:
+        full_output_field: "watermarked_model_output"
+        regex_pattern: 'assistant\s*\n<think>\s*\n\s*</think>\s*\n\s*(.*)$'
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "watermark_gen/data/baselines/unigram/generation_watermark_multi_news_qwen3_unigram_2026_0129_140049.jsonl"
+    field: "watermarked_model_output"
+  output:
+    path: "evaluation/results"

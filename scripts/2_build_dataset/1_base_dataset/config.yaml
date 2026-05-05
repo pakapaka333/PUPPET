@@ -1,0 +1,3 @@
+seed: 42
+num_samples: 5000
+output_dir: 2_build_dataset/1_base_dataset/data

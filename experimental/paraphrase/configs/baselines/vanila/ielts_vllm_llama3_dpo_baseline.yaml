@@ -1,0 +1,26 @@
+# General configuration
+general:
+  run_name: "paraphrase_vllm_ielts_llama3_dpo_baseline"
+
+# Paraphrase configuration
+paraphrase:
+  model_kwargs:
+    dtype: "float16"
+  generation_kwargs:
+    lex_diversity: 60
+    order_diversity: 60
+    do_sample: true
+    top_p: 0.75
+    top_k: null
+    max_length: 512
+  preprocess: []
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "vllm_gen/data/baselines/vanila/generation_vllm_ielts_llama3_dpo_baseline_2026_0120_132037.jsonl"
+    field: "vllm_model_output"
+  output:
+    path: "paraphrase/results"

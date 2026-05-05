@@ -1,0 +1,30 @@
+# General configuration
+general:
+  run_name: "detection_watermark_longform_qa_qwen3_k-semstamp"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-8B"
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "KSEMSTAMP"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "watermark_gen/data/baselines/k-semstamp/generation_watermark_longform_qa_qwen3_k-semstamp_2026_0130_183850.jsonl"
+    field: "watermarked_model_output"
+    extract:
+      method: flatten
+      kwargs: {}
+    preprocess:
+      - name: "extract_answer_with_regex"
+        kwargs:
+          regex_pattern: 'assistant\s*\n<think>\s*\n\s*</think>\s*\n\s*(.*)$'
+  output:
+    path: "watermark_det/results"
+    

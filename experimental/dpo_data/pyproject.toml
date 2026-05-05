@@ -1,0 +1,16 @@
+[project]
+name = "dpo_data"
+version = "0.1.0"
+description = "A project to collect data for dpo."
+authors = ["Koshiro Saito"]
+requires-python = ">=3.12"
+
+dependencies = [
+    "jupyterlab",
+    "ipykernel",
+
+    "datasets<4.0.0",
+    "nltk",
+    "matplotlib",
+    "pandas",
+]

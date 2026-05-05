@@ -1,0 +1,37 @@
+# General configuration
+general:
+  run_name: "generation_watermark_ielts_qwen3_14b_k-semstamp"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-14B"
+  kwargs:
+    dtype: "float16"
+    device_map: "auto"
+  transformers_config_kawrgs: {}
+
+# Watermarking parameters
+watermark:
+  active: true
+  algorithm_name: "KSEMSTAMP"
+  generation_kwargs:
+    use_chat_template: true
+    tokenizer_kwargs:
+      enable_thinking: false
+
+# Generation parameters
+generation:
+  save_every: 25
+  max_samples: null
+  n_generations_per_sample: 1
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    use_custom_dataset: true
+    custom_dataset: "dpo_data/data/ielts_preprocessed_random_200_test_202601161730"
+    benchmark: "ielts"
+    dataset: "ielts"
+  output:
+    path: "watermark_gen/data"

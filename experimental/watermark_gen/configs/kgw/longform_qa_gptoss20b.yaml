@@ -1,0 +1,38 @@
+# General configuration
+general:
+  run_name: "generation_watermark_longform_qa_gptoss20b"
+
+# Model configuration
+model:
+  name: "openai/gpt-oss-20b"
+  kwargs:
+    dtype: "auto"
+    device_map: "auto"
+  transformers_config_kawrgs:
+    max_new_tokens: 2048
+
+# Watermarking parameters
+watermark:
+  active: true
+  algorithm_name: "KGW"
+  generation_kwargs:
+    use_chat_template: true
+    tokenizer_kwargs:
+      reasoning_effort: "medium"
+
+# Generation parameters
+generation:
+  save_every: 25
+  max_samples: null
+  reproduce_kwargs:
+    seed: 42
+  kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    benchmark: "waterbench"
+    dataset: "longform_qa"
+  output:
+    path: "watermark_gen/data"

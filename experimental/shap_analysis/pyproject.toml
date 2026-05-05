@@ -1,0 +1,36 @@
+[project]
+name = "quantitative-analysis"
+version = "0.1.0"
+description = "A project to run quantitative analysis."
+authors = [{ name = "Koshiro Saito" }]
+requires-python = ">=3.12"
+
+dependencies = [
+    "datasets",
+    "pandas",
+    "pyyaml",
+    "tqdm",
+
+    "transformers<5",
+    "torch",
+    "accelerate",
+    
+    "rouge",
+    "vllm",
+    "shap",
+    
+    "jupyterlab",
+    "ipykernel",
+    "matplotlib",
+    "weasyprint<53",
+    "html2image",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+shap = { git = "https://github.com/maciejskorski/shap.git", branch = "fix/shap_text_colors" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url  = "https://download.pytorch.org/whl/cu128"
+explicit = true

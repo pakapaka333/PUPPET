@@ -1,0 +1,27 @@
+# General configuration
+general:
+  run_name: "detection_human_longform_qa_llama3_k-semstamp"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  vocab_size: 128256
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "KSEMSTAMP"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "submodules/WaterBench/data/WaterBench/2-1_longform_qa.jsonl"
+    field: "outputs"
+    extract:
+      method: flatten
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"

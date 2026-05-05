@@ -1,0 +1,17 @@
+general:
+  run_name: "shap_longform_qa_dpo_llama3"
+
+shap:
+  models:
+    openai:
+      kwargs: {}
+  preprocess: {}
+  max_samples: null
+
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "vllm_gen/data/ours/generation_vllm_longform_qa_llama3_dpo_lrx100_drstd_5000_2026_0206_133612.jsonl"
+    field: "vllm_model_output"
+  output:
+    path: "shap_analysis/results"

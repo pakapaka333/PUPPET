@@ -1,0 +1,26 @@
+# General configuration
+general:
+  run_name: "evaluation_longform_qa_human_multi_detector_llama3"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    detect_fakespotai:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+    detect_mage:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+  preprocess: {}
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "submodules/WaterBench/data/WaterBench/2-1_longform_qa.jsonl"
+    field: "outputs"
+  output:
+    path: "evaluation/results"

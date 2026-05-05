@@ -1,0 +1,35 @@
+# General configuration
+general:
+  run_name: "generation_watermark_multinews_qwen3_4b_unigram"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-4B"
+  kwargs:
+    dtype: "float16"
+    device_map: "auto"
+  transformers_config_kawrgs: {}
+
+# Watermarking parameters
+watermark:
+  active: true
+  algorithm_name: "Unigram"
+  generation_kwargs:
+    use_chat_template: true
+    tokenizer_kwargs:
+      enable_thinking: false
+
+# Generation parameters
+generation:
+  save_every: 25
+  max_samples: null
+  n_generations_per_sample: 1
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    benchmark: "waterbench"
+    dataset: "multi_news"
+  output:
+    path: "watermark_gen/data"

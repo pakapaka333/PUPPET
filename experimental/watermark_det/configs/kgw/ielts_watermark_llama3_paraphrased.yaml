@@ -1,0 +1,31 @@
+# General configuration
+general:
+  run_name: "detection_watermark_ielts_llama3_kgw_paraphrased"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "KGW"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "paraphrase/results/paraphrase_watermark_ielts_llama3_kgw_2026_0128_163325.jsonl"
+    field: "paraphrase_outputs"
+    extract:
+      method: "flatten"
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"
+
+# Device configuration
+device:
+  server: "hestia"
+  type: "cuda"

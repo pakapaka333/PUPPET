@@ -1,0 +1,22 @@
+# General configuration
+general:
+  run_name: "evaluation_multi_news_human"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    detect_openai:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+  preprocess: {}
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "submodules/WaterBench/data/WaterBench/4-1_multi_news.jsonl"
+    field: "outputs"
+  output:
+    path: "evaluation/results"

@@ -1,0 +1,47 @@
+# General configuration
+general:
+  run_name: "evaluation_vllm_ielts_qwen3_14b_dpo_multinews_lrx100_drstd_5000"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    llm_as_a_judge:
+      reference:
+        path: "vllm_gen/data/ours/different_sizes/generation_vllm_ielts_qwen3_14b_dpo_multinews_lrx100_drstd_5000_2026_0322_145812.jsonl"
+        field: "context"
+      kwargs:
+        model:
+          name: "openai/gpt-oss-20b"
+          kwargs:
+            dtype: "auto"
+            gpu_memory_utilization: 0.45
+            tensor_parallel_size: 1
+        chat_template_kwargs: {}
+        thinking_kwargs:
+          stop: ["<|start|>assistant<|channel|>final<|message|>"]
+          temperature: 0.0
+          max_tokens: 4096
+        scoring_kwargs:
+          temperature: 0.0
+        score_prefix: "Score: "
+        score_labels: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        prompt: "evaluation/materials/llm_as_a_judge_prompts/ielts.txt"
+        max_retries: 20
+        judge_outputs_dir: "evaluation/results/temporary"
+        judge_outputs_path: null
+        use_chat_template: true
+    detect_openai:
+        kwargs:
+          detector_kwargs:
+            device_map: "auto"
+  preprocess: []
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "vllm_gen/data/ours/different_sizes/generation_vllm_ielts_qwen3_14b_dpo_multinews_lrx100_drstd_5000_2026_0322_145812.jsonl"
+    field: "vllm_model_output"
+  output:
+    path: "evaluation/results"

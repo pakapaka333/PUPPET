@@ -1,0 +1,26 @@
+# General configuration
+general:
+  run_name: "detection_watermark_multi_news_llama3_k-semstamp_paraphrased"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "KSEMSTAMP"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "paraphrase/results/paraphrase_watermark_multinews_llama3_k-semstamp_2026_0203_152529.jsonl"
+    field: "paraphrase_outputs"
+    extract:
+      method: "flatten"
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"

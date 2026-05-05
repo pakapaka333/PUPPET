@@ -1,0 +1,28 @@
+# General configuration
+general:
+  run_name: "generation_vllm_multi_news_qwen3_dpo_baseline_wo_chat"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-8B"
+  kwargs:
+    dtype: "float16"
+    tensor_parallel_size: 1
+
+# Generation parameters
+generation:
+  max_samples: null
+  use_chat_template: false
+  kwargs:
+    n: 1
+  chat_template_kwargs:
+    enable_thinking: false
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    benchmark: "waterbench"
+    dataset: "multi_news"
+  output:
+    path: "vllm_gen/data"

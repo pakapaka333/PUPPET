@@ -1,0 +1,27 @@
+# General configuration
+general:
+  run_name: "detection_human_ielts_llama3_unigram"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  vocab_size: 128256
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "Unigram"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "dpo_data/data/ielts_preprocessed_random_200_test_202601161730_human_answers.jsonl"
+    field: "outputs"
+    extract:
+      method: flatten
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"

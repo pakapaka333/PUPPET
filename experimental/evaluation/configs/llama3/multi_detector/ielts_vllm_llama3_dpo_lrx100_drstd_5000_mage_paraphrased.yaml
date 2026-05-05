@@ -1,0 +1,22 @@
+# General configuration
+general:
+  run_name: "evaluation_vllm_ielts_llama3_dpo_lrx100_drstd_5000_mage_paraphrased"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    detect_mage:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+  preprocess: []
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "paraphrase/results/ours/multi_detector/paraphrase_vllm_ielts_llama3_dpo_lrx100_drstd_5000_mage_2026_0322_121307.jsonl"
+    field: "paraphrase_outputs"
+  output:
+    path: "evaluation/results"

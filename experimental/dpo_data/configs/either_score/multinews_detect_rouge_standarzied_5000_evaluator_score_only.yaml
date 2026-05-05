@@ -1,0 +1,34 @@
+dataset_name: "multinews_detect_rouge_standarzied_5000_evaluator_score_only"
+
+target_fields:
+  generation: "vllm_model_output"
+  evaluation: "evaluation_targets"
+
+preprocess:
+  rouge_score_waterbench: "standardize"
+  detect_openai: "standardize"
+
+score_weights:
+  rouge_score_waterbench: 1
+  detect_openai: 0
+
+pair_strategy: "best_and_worst"
+
+data_balance:
+  max_samples: null
+  for_training: 1.0
+  for_evaluation: 0.0
+  seed: 42
+
+use_columns:
+  - "prompt"
+  - "chosen"
+  - "rejected"
+  - "prompt_length"
+  - "chosen_length"
+  - "rejected_length"
+  - "chosen_score"
+  - "rejected_score"
+  - "dataset_config"
+  - "generation_config"
+  - "evaluation_config"

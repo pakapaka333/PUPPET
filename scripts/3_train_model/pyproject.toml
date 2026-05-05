@@ -1,0 +1,23 @@
+[project]
+name = "train-model"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "bitsandbytes",
+    "datasets<4.0.0",
+    "pandas",
+    "peft",
+    "pyyaml",
+    "torch",
+    "transformers<5.0.0",
+    "trl==0.24.0",
+    "wandb",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

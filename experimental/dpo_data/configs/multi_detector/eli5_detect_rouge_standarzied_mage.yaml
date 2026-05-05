@@ -1,0 +1,34 @@
+dataset_name: "eli5_detect_rouge_standarzied_mage"
+
+target_fields:
+  generation: "vllm_model_output"
+  evaluation: "evaluation_targets"
+
+preprocess:
+  rouge_score_waterbench: "standardize"
+  detect_mage: "standardize"
+
+score_weights:
+  rouge_score_waterbench: 1
+  detect_mage: 1
+
+pair_strategy: "best_and_worst"
+
+data_balance:
+  max_samples: null
+  for_training: 0.8
+  for_evaluation: 0.2
+  seed: 42
+
+use_columns:
+  - "prompt"
+  - "chosen"
+  - "rejected"
+  - "prompt_length"
+  - "chosen_length"
+  - "rejected_length"
+  - "chosen_score"
+  - "rejected_score"
+  - "dataset_config"
+  - "generation_config"
+  - "evaluation_config"

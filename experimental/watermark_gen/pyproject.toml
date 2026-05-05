@@ -1,0 +1,39 @@
+[project]
+name = "watermarking"
+version = "0.1.0"
+description = "A project to run language model watermarking."
+authors = ["Koshiro Saito"]
+requires-python = ">=3.10,<3.11"
+
+dependencies = [
+    "pandas",
+    "pyyaml",
+    "torch",
+
+    # for MarkLLM
+    "datasets",
+    "nltk",
+    "jieba",
+    "accelerate",
+    "SentencePiece",
+    "openai==0.28",
+    "matplotlib",
+    "Cython",
+    "Pillow==9.4.0",
+    "sacrebleu",
+    "sentence-transformers",
+    "networkx",
+    "translate",
+    "tiktoken",
+
+    ## for K-SemStamp
+    "kmeans-pytorch",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url  = "https://download.pytorch.org/whl/cu128"
+explicit = true

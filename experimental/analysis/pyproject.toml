@@ -1,0 +1,31 @@
+[project]
+name = "notebook"
+description = "A project to run notebook."
+version = "0.1.0"
+authors = ["Koshiro Saito"]
+requires-python = ">=3.12"
+
+dependencies = [
+    "jupyterlab",
+    "ipykernel",
+
+    "datasets",
+    "pandas",
+    "matplotlib",
+    "japanize-matplotlib",
+    "scikit-learn",
+
+    "torch",
+    "transformers",
+    "sentencepiece",
+    "accelerate",
+    "scipy",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url  = "https://download.pytorch.org/whl/cu128"
+explicit = true

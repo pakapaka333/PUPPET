@@ -1,0 +1,30 @@
+# General configuration
+general:
+  run_name: "evaluation_vllm_longform_qa_qwen3_5000_multi_detector"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    detect_fakespotai:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+    detect_mage:
+      kwargs:
+        detector_kwargs:
+          device_map: "auto"
+    rouge_score_waterbench:
+      reference:
+        path: "vllm_gen/data/for_dpo_data/generation_vllm_longform_qa_qwen3_random_5000_2025_1207_222047.jsonl"
+        field: "outputs"
+  preprocess: {}
+  max_samples: null
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "vllm_gen/data/for_dpo_data/generation_vllm_longform_qa_qwen3_random_5000_2025_1207_222047.jsonl"
+    field: "vllm_model_output"
+  output:
+    path: "evaluation/results"

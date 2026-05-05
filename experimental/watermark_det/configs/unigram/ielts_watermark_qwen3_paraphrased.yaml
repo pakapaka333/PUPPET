@@ -1,0 +1,27 @@
+# General configuration
+general:
+  run_name: "detection_watermark_ielts_qwen3_unigram_paraphrased"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-8B"
+  vocab_size: 151936
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "Unigram"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "paraphrase/results/paraphrase_watermark_ielts_qwen3_unigram_2026_0130_134840.jsonl"
+    field: "paraphrase_outputs"
+    extract:
+      method: "flatten"
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"

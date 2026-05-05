@@ -1,0 +1,11 @@
+score_weights:
+  rouge_score_waterbench: 1.0
+  detect_openai: 1.0
+
+pair_strategy: best_and_worst
+
+input:
+  base_dir: 2_build_dataset/1_base_dataset/data
+  responses_path: 2_build_dataset/2_llm_responses/data/responses.jsonl
+
+output_dir: 2_build_dataset/3_dpo_dataset/data

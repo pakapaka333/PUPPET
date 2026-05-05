@@ -1,0 +1,28 @@
+# General configuration
+general:
+  run_name: "generation_vllm_ielts_llama3_dpo_lrx100_drstd_5000_ckpt450"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  lora_path: "PUPPET/experimental/dpo/checkpoints/training_ielts_llama3_lrx100_drstd_5000_2026_0120_092958/checkpoint-450"
+  kwargs:
+    dtype: "float16"
+    tensor_parallel_size: 1
+
+# Generation parameters
+generation:
+  max_samples: null
+  kwargs:
+    n: 1
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    use_custom_dataset: true
+    custom_dataset: "dpo_data/data/ielts_preprocessed_random_200_test_202601161730"
+    benchmark: "ielts"
+    dataset: "ielts"
+  output:
+    path: "vllm_gen/data"

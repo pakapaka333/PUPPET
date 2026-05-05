@@ -1,0 +1,27 @@
+[project]
+name = "paraphrase"
+version = "0.1.0"
+description = "A project to paraphrase generations"
+authors = ["Koshiro Saito"]
+requires-python = ">=3.12"
+
+dependencies = [
+    "accelerate",
+    "datasets",
+    "nltk",
+    "pandas",
+    "pyyaml",
+    "torch",
+    "tqdm",
+    "transformers",
+    "scikit-learn",
+    "sentencepiece",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url  = "https://download.pytorch.org/whl/cu128"
+explicit = true

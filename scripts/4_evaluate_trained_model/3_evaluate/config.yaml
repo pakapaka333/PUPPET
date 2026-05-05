@@ -1,0 +1,6 @@
+model_keys:
+  - base
+  - trained
+
+responses_dir: 4_evaluate_trained_model/2_llm_responses/data
+output_dir: 4_evaluate_trained_model/3_evaluate/results

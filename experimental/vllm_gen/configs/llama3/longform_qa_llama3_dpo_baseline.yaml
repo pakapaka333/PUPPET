@@ -1,0 +1,25 @@
+# General configuration
+general:
+  run_name: "generation_vllm_longform_qa_llama3_dpo_baseline"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  kwargs:
+    dtype: "float16"
+    tensor_parallel_size: 1
+
+# Generation parameters
+generation:
+  max_samples: null
+  kwargs:
+    n: 3
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    benchmark: "waterbench"
+    dataset: "longform_qa"
+  output:
+    path: "vllm_gen/data"

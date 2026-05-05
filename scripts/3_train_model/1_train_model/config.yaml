@@ -1,0 +1,37 @@
+model:
+  name: meta-llama/Llama-3.1-8B-Instruct
+  kwargs:
+    dtype: float16
+    device_map: auto
+
+training:
+  use_lora: true
+  lora_kwargs:
+    target_modules: null
+  dataset_kwargs:
+    max_train_samples: null
+    max_eval_samples: null
+  dpo_kwargs:
+    learning_rate: 1.0e-04
+    beta: 0.1
+    loss_type: "sigmoid"
+    num_train_epochs: 1
+    per_device_train_batch_size: 10
+    logging_steps: 16
+    save_strategy: "no"
+    save_steps: null
+    eval_strategy: "no"
+    eval_steps: null
+    per_device_eval_batch_size: null
+    data_seed: 42
+    max_length: 800
+    max_prompt_length: 500
+    max_completion_length: 300
+    generate_during_eval: false
+    precompute_ref_log_probs: true
+    remove_unused_columns: false
+
+dataset_dir: 2_build_dataset/3_dpo_dataset/data
+output_dir: 3_train_model/1_train_model/checkpoints
+
+wandb: null

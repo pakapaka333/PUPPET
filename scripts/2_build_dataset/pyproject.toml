@@ -1,0 +1,24 @@
+[project]
+name = "build-dataset"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "datasets<4.0.0",
+    "nltk",
+    "pandas",
+    "pyyaml",
+    "rouge",
+    "torch",
+    "transformers<5.0.0",
+    "tqdm",
+    "vllm>=0.11.0,<0.20.0",
+    "accelerate",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

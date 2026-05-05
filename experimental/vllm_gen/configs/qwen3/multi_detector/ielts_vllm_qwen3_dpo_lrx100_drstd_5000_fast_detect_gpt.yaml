@@ -1,0 +1,30 @@
+# General configuration
+general:
+  run_name: "generation_vllm_ielts_qwen3_dpo_lrx100_drstd_5000_fast_detect_gpt"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-8B"
+  lora_path: "PUPPET/experimental/dpo/checkpoints/training_ielts_qwen3_lrx100_drstd_5000_fast_detect_gpt_2026_0219_112039"
+  kwargs:
+    dtype: "float16"
+    tensor_parallel_size: 1
+
+# Generation parameters
+generation:
+  max_samples: null
+  kwargs:
+    n: 1
+  chat_template_kwargs:
+    enable_thinking: false
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  input:
+    use_custom_dataset: true
+    custom_dataset: "dpo_data/data/ielts_preprocessed_random_200_test_202601161730"
+    benchmark: "ielts"
+    dataset: "ielts"
+  output:
+    path: "vllm_gen/data"

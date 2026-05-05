@@ -1,0 +1,27 @@
+# General configuration
+general:
+  run_name: "detection_human_ielts_qwen3_14b_k-semstamp"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-14B"
+  vocab_size: 151936
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "KSEMSTAMP"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "dpo_data/data/ielts_preprocessed_random_200_test_202601161730_human_answers.jsonl"
+    field: "outputs"
+    extract:
+      method: flatten
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"

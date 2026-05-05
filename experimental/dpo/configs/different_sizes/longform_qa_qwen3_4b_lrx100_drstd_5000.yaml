@@ -1,0 +1,46 @@
+# General configuration
+general:
+  project_name: "PUPPET"
+  run_name: "training_longform_qa_qwen3_4b_lrx100_drstd_5000"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-4B"
+  kwargs:
+    dtype: "float16"
+    device_map: "auto"
+
+# Training parameters
+training:
+  dataset_kwargs:
+    max_train_samples: null
+    max_eval_samples: null
+  use_lora: true
+  lora_kwargs:
+    target_modules: null
+  dpo_kwargs:
+    learning_rate: 1.0e-04
+    beta: 0.1
+    loss_type: "sigmoid"
+    num_train_epochs: 1
+    per_device_train_batch_size: 20
+    logging_steps: 16
+    save_strategy: "no"
+    save_steps: null
+    eval_strategy: "no"
+    eval_steps: null
+    per_device_eval_batch_size: null
+    data_seed: 42
+    max_length: 800
+    max_prompt_length: 500
+    max_completion_length: 300
+    generate_during_eval: false
+    precompute_ref_log_probs: true
+    remove_unused_columns: false
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  dataset: "PUPPET/experimental/dpo_data/data/eli5_detect_rouge_standarzied_5000_qwen3_4b_202603212141"
+  output:
+    path: "dpo/checkpoints"

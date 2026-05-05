@@ -1,0 +1,36 @@
+dataset_name: "ietls_detect_laaj_standarzied_5000_logprobs_ielts"
+
+target_fields:
+  generation: "vllm_model_output"
+  evaluation: "evaluation_targets"
+
+scores:
+  llm_as_a_judge:
+    preprocessing: "standardize"
+    weight: 1
+  detect_openai:
+    preprocessing: "standardize"
+    weight: 1
+
+pair_strategy: "best_and_worst"
+
+ignore_score: -1.0
+
+data_balance:
+  max_samples: null
+  for_training: 1.0
+  for_evaluation: 0.0
+  seed: 42
+
+use_columns:
+  - "prompt"
+  - "chosen"
+  - "rejected"
+  - "prompt_length"
+  - "chosen_length"
+  - "rejected_length"
+  - "chosen_score"
+  - "rejected_score"
+  - "dataset_config"
+  - "generation_config"
+  - "evaluation_config"

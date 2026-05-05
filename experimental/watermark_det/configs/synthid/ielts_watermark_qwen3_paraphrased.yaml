@@ -1,0 +1,31 @@
+# General configuration
+general:
+  run_name: "detection_watermark_ielts_qwen3_synthid_paraphrased"
+
+# Model configuration
+model:
+  name: "Qwen/Qwen3-8B"
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "SynthID"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "paraphrase/results/paraphrase_watermark_ielts_qwen3_synthid_2026_0121_090344.jsonl"
+    field: "paraphrase_outputs"
+    extract:
+      method: "flatten"
+      kwargs: {}
+    preprocess: []
+  output:
+    path: "watermark_det/results"
+
+# Device configuration
+device:
+  server: "hestia"
+  type: "cuda"

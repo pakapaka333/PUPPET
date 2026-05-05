@@ -1,0 +1,5 @@
+seed: 42
+num_samples: 500
+# Start index is set after the training set (5000 samples) to avoid overlap
+start_index: 5000
+output_dir: 4_evaluate_trained_model/1_setup/data

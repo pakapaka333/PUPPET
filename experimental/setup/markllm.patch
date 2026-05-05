@@ -1,0 +1,220 @@
+diff --git a/config/KSEMSTAMP.json b/config/KSEMSTAMP.json
+index 375f760..32b392e 100644
+--- a/config/KSEMSTAMP.json
++++ b/config/KSEMSTAMP.json
+@@ -10,5 +10,5 @@
+     "k": 8,
+     "prime_P": 15485863,
+     "threshold": 3.0,
+-    "path_to_centroids": "watermark/k_semstamp/centroids/c4-cluster_8_centers"
++    "path_to_centroids": "submodules/MarkLLM/watermark/k_semstamp/centroids/c4-cluster_8_centers"
+ }
+\ No newline at end of file
+diff --git a/watermark/base.py b/watermark/base.py
+index dc3df14..6a13595 100644
+--- a/watermark/base.py
++++ b/watermark/base.py
+@@ -74,13 +74,24 @@ class BaseWatermark:
+ 
+     def generate_unwatermarked_text(self, prompt: str, *args, **kwargs) -> str:
+         """Generate unwatermarked text."""
++
++        if kwargs.get("use_chat_template", False):
++            # Encode prompt
++            chat_style_prompt = [{"role": "user", "content": prompt}]
++            encoded_prompt = self.config.generation_tokenizer.apply_chat_template(chat_style_prompt, return_tensors="pt", return_dict=True, add_special_tokens=True, add_generation_prompt=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device)
++            # Generate unwatermarked text
++            encoded_unwatermarked_text = self.config.generation_model.generate(**encoded_prompt, **self.config.gen_kwargs)
++            # Decode
++            unwatermarked_text = self.config.generation_tokenizer.batch_decode(encoded_unwatermarked_text, skip_special_tokens=False)[0]
++
++        else:
++            # Encode prompt
++            encoded_prompt = self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device)
++            # Generate unwatermarked text
++            encoded_unwatermarked_text = self.config.generation_model.generate(**encoded_prompt, **self.config.gen_kwargs)
++            # Decode
++            unwatermarked_text = self.config.generation_tokenizer.batch_decode(encoded_unwatermarked_text, skip_special_tokens=True)[0]
+         
+-        # Encode prompt
+-        encoded_prompt = self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True).to(self.config.device)
+-        # Generate unwatermarked text
+-        encoded_unwatermarked_text = self.config.generation_model.generate(**encoded_prompt, **self.config.gen_kwargs)
+-        # Decode
+-        unwatermarked_text = self.config.generation_tokenizer.batch_decode(encoded_unwatermarked_text, skip_special_tokens=True)[0]
+         return unwatermarked_text
+ 
+     def detect_watermark(self, text:str, return_dict: bool=True, *args, **kwargs) -> Union[tuple, dict]:
+diff --git a/watermark/exp_gumbel/exp_gumbel.py b/watermark/exp_gumbel/exp_gumbel.py
+index 70a9d40..2d88364 100644
+--- a/watermark/exp_gumbel/exp_gumbel.py
++++ b/watermark/exp_gumbel/exp_gumbel.py
+@@ -56,11 +56,27 @@ class EXPGumbelUtils:
+                 config (EXPGumbelConfig): Configuration for the EXPGumbel algorithm.
+         """
+         self.config = config
+-        self.generator = torch.Generator().manual_seed(self.config.seed)
+-        self.uniform = torch.clamp(torch.rand((self.config.vocab_size * self.config.prefix_length, self.config.vocab_size), 
+-                                         generator=self.generator, dtype=torch.float32), min=self.config.eps)
+-        self.gumbel = (-torch.log(torch.clamp(-torch.log(self.uniform), min=self.config.eps))).to(self.config.device)
++
++        ## Note: This implementation costs too much memory which leads to OOM. Therefore, we generate gumbel on the fly.
++        # self.generator = torch.Generator().manual_seed(self.config.seed)
++        # self.uniform = torch.clamp(torch.rand((self.config.vocab_size * self.config.prefix_length, self.config.vocab_size), 
++        #                                  generator=self.generator, dtype=torch.float32), min=self.config.eps)
++        # self.gumbel = (-torch.log(torch.clamp(-torch.log(self.uniform), min=self.config.eps))).to(self.config.device)
++
++    def generate_deterministic_uniform_row(self, seed_token: int) -> torch.Tensor:
++        """Generate a random uniform row determined by the previous token."""
++        seed = (self.config.seed + int(seed_token)) & 0xFFFFFFFFFFFF_FFFF
++        generator = torch.Generator().manual_seed(seed)
++        uniform = torch.clamp(torch.rand((self.config.vocab_size, ),
++                            generator=generator, dtype=torch.float32), min=self.config.eps)
++        return uniform
+     
++    def generate_deterministic_gumbel_row(self, seed_token: int) -> torch.Tensor:
++        """Generate a random gumbel row determined by the previous token."""
++        uniform = self.generate_deterministic_uniform_row(seed_token)
++        gumbel = (-torch.log(torch.clamp(-torch.log(uniform), min=self.config.eps))).to(self.config.device)
++        return gumbel
++
+     def _value_transformation(self, value):
+         """Transform the value to a range between 0 and 1."""
+         return value/(value + 1)
+@@ -84,7 +100,16 @@ class EXPGumbelLogitsProcessor(LogitsProcessor):
+         if input_ids.shape[-1] < self.config.prefix_length:
+             return scores
+         prev_token = torch.sum(input_ids[:, -self.config.prefix_length:], dim=-1)  # (batch_size,)
+-        gumbel = self.utils.gumbel[prev_token]  # (batch_size, vocab_size)
++
++        ## Note: This implementation costs too much memory which leads to OOM. Therefore, we generate gumbel row by row.
++        # gumbel = self.utils.gumbel[prev_token]  # (batch_size, vocab_size)
++
++        gumbel_rows = []
++        for pt in prev_token.tolist():
++            g = self.utils.generate_deterministic_gumbel_row(pt)
++            gumbel_rows.append(g)
++        gumbel = torch.stack(gumbel_rows, dim=0)  # (batch_size, vocab_size)
++        
+         return scores[..., :gumbel.shape[-1]] / self.config.temperature + gumbel
+ 
+ 
+@@ -126,7 +151,10 @@ class EXPGumbel(BaseWatermark):
+         """Generate watermarked text using the EXPGumbel algorithm."""
+ 
+         # Encode prompt
+-        encoded_prompt = self.config.generation_tokenizer.encode(prompt, return_tensors="pt", add_special_tokens=True).to(self.config.device)
++        encoded_prompt = self.config.generation_tokenizer.apply_chat_template([{"role": "user", "content": prompt}], return_tensors="pt", return_dict=True, add_special_tokens=True, add_generation_prompt=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device) \
++                        if kwargs.get("use_chat_template", False) \
++                        else self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device)
++        encoded_prompt = encoded_prompt["input_ids"]
+ 
+         # Initialize
+         inputs = encoded_prompt
+@@ -171,7 +199,11 @@ class EXPGumbel(BaseWatermark):
+         for i in range(self.config.prefix_length, seq_len):
+             prev_tokens_sum = torch.sum(encoded_text[i - self.config.prefix_length:i], dim=-1)
+             token = encoded_text[i]
+-            u = self.utils.uniform[prev_tokens_sum, token]
++
++            ## Note: This implementation costs too much memory which leads to OOM. Therefore, we generate uniform row by row.
++            # u = self.utils.uniform[prev_tokens_sum, token]
++            u = self.utils.generate_deterministic_uniform_row(prev_tokens_sum)[token]
++
+             score += log(1 / (1 - u))
+         
+         p_value = scipy.stats.gamma.sf(score, seq_len - self.config.prefix_length, loc=0, scale=1)
+@@ -199,7 +231,11 @@ class EXPGumbel(BaseWatermark):
+             # Seed the random number generator using the prefix of the encoded text
+             prev_tokens_sum = torch.sum(encoded_text[i - self.config.prefix_length:i], dim=-1)
+             token = encoded_text[i]
+-            u = self.utils.uniform[prev_tokens_sum, token]
++
++            ## Note: This implementation costs too much memory which leads to OOM. Therefore, we generate uniform row by row.
++            # u = self.utils.uniform[prev_tokens_sum, token]
++            u = self.utils.generate_deterministic_uniform_row(prev_tokens_sum)[token]
++
+             score = log(1 / (1 - u))
+             highlight_values.append(self.utils._value_transformation(score))
+ 
+diff --git a/watermark/k_semstamp/k_semstamp.py b/watermark/k_semstamp/k_semstamp.py
+index e1819bd..bf4d9db 100644
+--- a/watermark/k_semstamp/k_semstamp.py
++++ b/watermark/k_semstamp/k_semstamp.py
+@@ -43,8 +43,8 @@ class KSemStampConfig(BaseConfig):
+     def initialize_parameters(self) -> None:
+         """Initialize algorithm-specific parameters."""
+         self.domain_data= self.config_dict['domain_data']
+-        self.max_new_tokens = self.config_dict['max_new_tokens']
+-        self.min_new_tokens = self.config_dict['min_new_tokens']
++        self.max_new_tokens = self.gen_kwargs.get('max_new_tokens', None) or self.config_dict['max_new_tokens']
++        self.min_new_tokens = self.gen_kwargs.get('min_new_tokens', None) or self.config_dict['min_new_tokens']
+         self.path_to_embedder = self.config_dict['path_to_embedder']
+         self.N_max = self.config_dict['N_max']
+         self.gamma = self.config_dict['gamma']
+@@ -306,9 +306,19 @@ class KSemStamp(BaseWatermark):
+         # get cluster mask
+         mask = self.utils.get_cluster_mask(curr_cluster_id, self.config.k, self.config.gamma)
+ 
++        if kwargs.get("use_chat_template", False):
++            text_ids = self.config.generation_tokenizer.apply_chat_template(
++                [{"role": "user", "content": prompt}],
++                return_tensors="pt", return_dict=True, add_special_tokens=True, add_generation_prompt=True, **kwargs.get("tokenizer_kwargs", {})
++                ).to(self.config.generation_model.device)["input_ids"]
++        else:
++            text_ids = self.config.generation_tokenizer(
++                prompt, return_tensors='pt', add_special_tokens=True, **kwargs.get("tokenizer_kwargs", {})
++                ).to(self.config.generation_model.device)["input_ids"]
++        prompt = self.config.generation_tokenizer.decode(text_ids[0], skip_special_tokens=True)
++
+         text = prompt
+         new_text = prompt
+-        text_ids = self.config.generation_tokenizer.encode(prompt, return_tensors='pt').to(self.config.generation_model.device)
+         prompt_length = len(text_ids[0])
+         sent_end_criteria.update(new_text)
+ 
+diff --git a/watermark/kgw/kgw.py b/watermark/kgw/kgw.py
+index 3d4e73e..b0b2456 100644
+--- a/watermark/kgw/kgw.py
++++ b/watermark/kgw/kgw.py
+@@ -226,7 +226,9 @@ class KGW(BaseWatermark):
+         )
+         
+         # Encode prompt
+-        encoded_prompt = self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True).to(self.config.device)
++        encoded_prompt = self.config.generation_tokenizer.apply_chat_template([{"role": "user", "content": prompt}], return_tensors="pt", return_dict=True, add_special_tokens=True, add_generation_prompt=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device) \
++                        if kwargs.get("use_chat_template", False) \
++                        else self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device)
+         # Generate watermarked text
+         encoded_watermarked_text = generate_with_watermark(**encoded_prompt)
+         # Decode
+diff --git a/watermark/synthid/synthid.py b/watermark/synthid/synthid.py
+index bac6235..6898737 100644
+--- a/watermark/synthid/synthid.py
++++ b/watermark/synthid/synthid.py
+@@ -512,7 +512,9 @@ class SynthID(BaseWatermark):
+             **self.config.gen_kwargs
+         )
+         
+-        encoded_prompt = self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True).to(self.config.device)
++        encoded_prompt = self.config.generation_tokenizer.apply_chat_template([{"role": "user", "content": prompt}], return_tensors="pt", return_dict=True, add_special_tokens=True, add_generation_prompt=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device) \
++                        if kwargs.get("use_chat_template", False) \
++                        else self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device)
+         encoded_watermarked_text = generate_with_watermark(**encoded_prompt)
+         watermarked_text = self.config.generation_tokenizer.batch_decode(encoded_watermarked_text, skip_special_tokens=True)[0]
+         return watermarked_text
+diff --git a/watermark/unigram/unigram.py b/watermark/unigram/unigram.py
+index 71e76aa..48cae5f 100644
+--- a/watermark/unigram/unigram.py
++++ b/watermark/unigram/unigram.py
+@@ -181,7 +181,9 @@ class Unigram(BaseWatermark):
+         )
+         
+         # encode prompt
+-        encoded_prompt = self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True).to(self.config.device)
++        encoded_prompt = self.config.generation_tokenizer.apply_chat_template([{"role": "user", "content": prompt}], return_tensors="pt", return_dict=True, add_special_tokens=True, add_generation_prompt=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device) \
++                        if kwargs.get("use_chat_template", False) \
++                        else self.config.generation_tokenizer(prompt, return_tensors="pt", add_special_tokens=True, **kwargs.get("tokenizer_kwargs", {})).to(self.config.device)
+         # generate watermarked text
+         encoded_watermarked_text = generate_with_watermark(**encoded_prompt)
+         # decode

@@ -1,0 +1,29 @@
+# General configuration
+general:
+  run_name: "detection_watermark_longform_qa_llama3_expgumbel"
+
+# Model configuration
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  transformers_config_kawrgs: {}
+
+# Watermark configuration
+watermark:
+  algorithm_name: "EXPGumbel"
+  generation_kwargs: {}
+
+# File configuration
+file:
+  root_dir: "PUPPET/experimental"
+  generation:
+    path: "watermark_gen/data/baselines/expgumbel/generation_watermark_longform_qa_llama3_expgumbel_2026_0129_165039.jsonl"
+    field: "watermarked_model_output"
+    extract:
+      method: flatten
+      kwargs: {}
+    preprocess:
+      - name: "extract_answer_with_regex"
+        kwargs:
+          regex_pattern: 'assistant\s*\n\s*\n(.*)$'
+  output:
+    path: "watermark_det/results"

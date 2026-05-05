@@ -1,0 +1,21 @@
+[project]
+name = "vllm-gemeratopm"
+version = "0.1.0"
+description = "A project to run language model with vLLM."
+authors = ["Koshiro Saito"]
+requires-python = ">=3.12"
+
+dependencies = [
+    "datasets<4.0.0",
+    "vllm",
+    "torch",
+    "pandas",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url  = "https://download.pytorch.org/whl/cu128"
+explicit = true
