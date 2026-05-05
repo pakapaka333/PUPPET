@@ -43,7 +43,7 @@ the first demonstration that detectability and task performance can be jointly o
 
 # 🗞️ News
 
-- 2026-05-05: 🎉 We have made our preprint and experimental code publicly available.
+- 2026-05-05: 🎉 We have made our preprint ([paper](https://arxiv.org/abs/2605.01350)) and experimental code publicly available.
 
 # 🔍 Overview
 
@@ -197,8 +197,8 @@ Everything else — scoring, DPO pair construction, training, and evaluation —
 
 ## 🧪 Reproduce the paper experiments
 
-The code used in the paper lives in `[experimental/](experimental/)`. 
-See `[experimental/README.md](experimental/README.md)` for the full setup and usage instructions.
+The code used in the paper lives in [experimental/](experimental/)
+See [experimental/README.md](experimental/README.md) for the full setup and usage instructions.
 
 # ✒️ Citation
 
