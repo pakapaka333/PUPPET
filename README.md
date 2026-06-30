@@ -24,6 +24,7 @@ the first demonstration that detectability and task performance can be jointly o
   <summary><strong>Contents</strong></summary>
 
 - [🗞️ News](#️-news)
+- [👀 Findings](#-findings)
 - [🔍 Overview](#-overview)
 - [🔧 Usage](#-usage)
   - [🎬 Hands-on Demo: ELI-5 × Llama-3.1-8B-Instruct](#-hands-on-demo-eli-5--llama-31-8b-instruct)
@@ -44,6 +45,15 @@ the first demonstration that detectability and task performance can be jointly o
 # 🗞️ News
 
 - 2026-05-05: 🎉 We have made our preprint ([paper](https://arxiv.org/abs/2605.01350)) and experimental code publicly available.
+
+
+# 👀 Findings
+
+- **PUPPET can improve detectability and task performance simultaneously.** By jointly optimizing both via DPO, PUPPET matches watermarking methods in detectability while consistently surpassing them on downstream tasks.
+- **PUPPET's gains generalize and are robust.** Improvements hold across out-of-domain tasks, different base LLM families and sizes, and different detectors, and remain robust even to paraphrasing attacks — a major challenge for watermarking methods.
+- **PUPPET is practically efficient.** PUPPET needs only a few thousand training samples and 1–2 GPU hours, making joint optimization practical.
+
+
 
 # 🔍 Overview
 
